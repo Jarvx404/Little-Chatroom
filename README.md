@@ -19,6 +19,8 @@ This is still the base version of the project that has only the essential minima
 - [ ] Some sort of encryption
 - [ ] File sharing
 - [ ] Highlighted mentions
+- [ ] Add chat filter (toggleable)
+- [ ] Add user rankings and mutes/bans
 
 
 ------------
