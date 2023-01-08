@@ -1,3 +1,4 @@
+![Little chatroom banner](./LittleChatroomBanner.png)
 # Little Chatroom
 
 A simple java based centralised chatroom that works in the terminal without a GUI.
