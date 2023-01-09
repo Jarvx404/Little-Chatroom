@@ -3,6 +3,7 @@ package src;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.Set;
 
 
 //Look mom, I build a chatroom!
@@ -16,6 +17,7 @@ public class Client {
 
     public Client(Socket socket, String username){
         try{
+            running = true;
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -25,7 +27,7 @@ public class Client {
         }
     }
 
-
+    private boolean running;
     /*
 
        The big boy thread that listens for messages, maybe another thread is unnecesary science don't think main is occupied but still,
@@ -37,7 +39,7 @@ public class Client {
             @Override
             public void run() {
                 String messageFromServer;
-                while(socket.isConnected()){
+                while(socket.isConnected() && running){
                     try{
                         messageFromServer = bufferedReader.readLine();
                         System.out.println(messageFromServer);
@@ -55,6 +57,9 @@ public class Client {
             if(bufferedReader != null){bufferedReader.close();}
             if(socket != null){socket.close();}
 
+
+
+
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -62,7 +67,7 @@ public class Client {
 
 
     public static void main(String[] args) throws IOException {
-        //Handling usernames, TODO: need to have some sort of ID's to users bc two users might have the same username weird shit when private messages feature
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your username here: ");
         String username = scanner.nextLine();
@@ -87,9 +92,9 @@ public class Client {
 
                     Scanner scanner = new Scanner(System.in);
 
-                    while(socket.isConnected()){
+                    while(socket.isConnected() && running){
                         String messageToSend = scanner.nextLine();
-                        bufferedWriter.write(username + ':' + messageToSend);
+                        bufferedWriter.write(messageToSend);
                         bufferedWriter.newLine();
                         bufferedWriter.flush();
                     }

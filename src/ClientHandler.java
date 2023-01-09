@@ -16,6 +16,7 @@ public class ClientHandler implements Runnable{
 
     ClientHandler(Socket socket){
         try{
+
             this.socket = socket;
             //gets the character streams of the client's IO streams
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -46,18 +47,27 @@ public class ClientHandler implements Runnable{
         }
     }
 
+    private void sendMessage(String s, ClientHandler clientHandler){
+        try {
+            clientHandler.bufferedWriter.write(s);
+            clientHandler.bufferedWriter.write('\n'); //sending newline bc client waits for it
+            clientHandler.bufferedWriter.flush(); //flush the buffer because the message (most likely) does not fill the buffer
+        }catch (IOException e){
+            closeEverything(socket, bufferedReader, bufferedWriter);
+        }
+    }
+    private void targetedMessage(String ts, String targetName){
+        for(ClientHandler clientHandler : clientHandlers){
+            if(clientHandler.clientUsername == targetName){
+                sendMessage(ts, clientHandler);
+            }
+        }
+    }
     private void broadcastMessage(String s) {
         for(ClientHandler clientHandler : clientHandlers){
-            try{
                 if(!clientHandler.clientUsername.equals(clientUsername)) {
-                    clientHandler.bufferedWriter.write(s);
-                    clientHandler.bufferedWriter.write('\n'); //sending newline bc client waits for it
-                    clientHandler.bufferedWriter.flush(); //flush the buffer because the message (most likely) does not fill the buffer
+                   sendMessage(s, clientHandler);
                 }
-
-            }catch (IOException e){
-                closeEverything(socket, bufferedReader, bufferedWriter);
-            }
         }
     }
 
@@ -67,6 +77,7 @@ public class ClientHandler implements Runnable{
         clientHandlers.remove(this);
     }
 
+
     @Override
     public void run() {
         String messageFromClient;
@@ -74,11 +85,31 @@ public class ClientHandler implements Runnable{
         while(socket.isConnected()){
             try{
                 messageFromClient = bufferedReader.readLine();
-                System.out.print(messageFromClient);
-                broadcastMessage(messageFromClient);
+                classifyMessage(messageFromClient);
             }catch (IOException e){
                 closeEverything(socket, bufferedReader, bufferedWriter);
             }
         }
     }
+
+    public void classifyMessage(String messageFromClient){
+        String[] tokenizedMessage = messageFromClient.split(" ", 2);
+        if(tokenizedMessage[0].charAt(0) == '/'){
+            switch (tokenizedMessage[0]){
+                case "/nickname":
+                    this.clientUsername = tokenizedMessage[1];
+                    targetedMessage("Username changed to: " + clientUsername, clientUsername);
+                    break;
+                case "/private":
+                    targetedMessage(tokenizedMessage[2], tokenizedMessage[1]);
+                    break;
+            }
+        }
+        else{
+            broadcastMessage(clientUsername + ": " + messageFromClient);
+            System.out.println(clientUsername + ": " + messageFromClient);
+        }
+    }
+
+
 }
