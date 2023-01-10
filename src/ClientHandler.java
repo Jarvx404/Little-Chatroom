@@ -99,6 +99,7 @@ public class ClientHandler implements Runnable{
                 case "/nickname":
                     this.clientUsername = tokenizedMessage[1];
                     targetedMessage("Username changed to: " + clientUsername, clientUsername);
+                    targetedMessage("+CUNAME " + clientUsername, clientUsername);
                     break;
                 case "/private":
                     targetedMessage(tokenizedMessage[2], tokenizedMessage[1]);

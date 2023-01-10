@@ -42,7 +42,7 @@ public class Client {
                 while(socket.isConnected() && running){
                     try{
                         messageFromServer = bufferedReader.readLine();
-                        System.out.println(messageFromServer);
+                        classifyMessage(messageFromServer);
                     }catch (IOException e){
                         closeClientConnection (socket, bufferedReader, bufferedWriter);
                     }
@@ -67,9 +67,9 @@ public class Client {
 
 
     public static void main(String[] args) throws IOException {
-
+        entranceText();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your username here: ");
+        System.out.println("| Enter your username here: ");
         String username = scanner.nextLine();
 
         Socket connectionSocket = new Socket("localhost", 1234);
@@ -104,6 +104,41 @@ public class Client {
             }
     }).start();
 
+    }
+
+    public void classifyMessage(String messageFromServer){
+        String[] tokenizedMessage = messageFromServer.split(" ", 2);
+        //gets command from server TODO:find a better way
+
+        if(tokenizedMessage[0].charAt(0) == '+'){
+            switch (tokenizedMessage[0]){
+                case "+CUNAME":
+                    this.username = tokenizedMessage[1];
+                    break;
+            }
+        }
+
+
+        /*
+            ----------------- Not working quite yet -----------------
+
+        else if(tokenizedMessage[1].charAt(2) == '@'){
+            if(tokenizedMessage[1].substring(2) == username){
+            System.out.println("****" + tokenizedMessage[1].substring(2) + "****");}
+            else{
+                System.out.println("---" + tokenizedMessage[1].substring(2) + "---");}
+
+        }
+        */
+        else{
+            System.out.println(messageFromServer);
+        }
+    }
+
+    public static void entranceText(){
+        System.out.println("------------------------- =========== -------------------------");
+        System.out.println("------------------------- Little Chat -------------------------");
+        System.out.println("------------------------- =========== -------------------------");
     }
 
 

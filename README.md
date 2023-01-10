@@ -21,7 +21,7 @@ This is still the base version of the project that has only the essential minima
 - [ ] Highlighted mentions
 - [ ] Add chat filter (toggleable)
 - [ ] Add user rankings and mutes/bans
-
+- [ ] Command Handler (Server side)
 
 ------------
 
