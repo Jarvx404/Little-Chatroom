@@ -58,7 +58,7 @@ public class ClientHandler implements Runnable{
     }
     private void targetedMessage(String ts, String targetName){
         for(ClientHandler clientHandler : clientHandlers){
-            if(clientHandler.clientUsername == targetName){
+            if(clientHandler.clientUsername.equals(targetName)){
                 sendMessage(ts, clientHandler);
             }
         }
@@ -93,7 +93,7 @@ public class ClientHandler implements Runnable{
     }
 
     public void classifyMessage(String messageFromClient){
-        String[] tokenizedMessage = messageFromClient.split(" ", 2);
+        String[] tokenizedMessage = messageFromClient.split(" ", 3);
         if(tokenizedMessage[0].charAt(0) == '/'){
             switch (tokenizedMessage[0]){
                 case "/nickname":
@@ -102,13 +102,13 @@ public class ClientHandler implements Runnable{
                     targetedMessage("+CUNAME " + clientUsername, clientUsername);
                     break;
                 case "/private":
-                    targetedMessage(tokenizedMessage[2], tokenizedMessage[1]);
+                    targetedMessage(clientUsername + " -PRIVATE--> :" + tokenizedMessage[2], tokenizedMessage[1]);
+                    System.out.println(clientUsername + " -PRIVATE--> :" + tokenizedMessage[1]);
                     break;
             }
         }
         else{
             broadcastMessage(clientUsername + ": " + messageFromClient);
-            System.out.println(clientUsername + ": " + messageFromClient);
         }
     }
 
