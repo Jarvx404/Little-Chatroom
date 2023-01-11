@@ -10,18 +10,19 @@ This is still the base version of the project that has only the essential minima
 ## Features:
 * It can handle multiple connections
 * Display messages on entrance and exit of users
+* can send private messages to users
 
 ------------
 
 
 ## To-be-added:
-- [ ] Private messages
+- [x] Private messages
 - [ ] Some sort of encryption
 - [ ] File sharing
 - [ ] Highlighted mentions
 - [ ] Add chat filter (toggleable)
 - [ ] Add user rankings and mutes/bans
-- [ ] Command Handler (Server side)
+- [x] Command Handler (Server side)
 
 ------------
 
